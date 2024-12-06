@@ -1,33 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Badge, Col, Container, Row } from 'react-bootstrap';
+import { Cards } from './components/Cards/Cards';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import { useEffect } from 'react';
+import { findFusion } from './utils/fusion';
+import { updateCombinations } from './store/slice/combinationSlice';
+import { Result } from './components/Result/Result';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const handCards = useAppSelector(state => state.cards.handCards);
+  const fieldCards = useAppSelector(state => state.cards.fieldCards);
+  const fuses = useAppSelector(state => state.combinations.fuses);
+  const equips = useAppSelector(state => state.combinations.equips);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const combinations = findFusion(handCards, fieldCards);
+    dispatch(updateCombinations(combinations));
+  }, [handCards, fieldCards])
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Container>
+        <div className="header d-flex justify-content-center align-items-center">
+          <h1>Fusion Calculator</h1>
+        </div>
+        <Row className="mt-2 justify-content-center align-items-center">
+          <Col xs={6}>
+            <Badge bg="secondary">Fusions: {fuses.length}</Badge>
+          </Col>
+          <Col xs={6}>
+            <Badge bg="secondary">Equips: {equips.length}</Badge>
+          </Col>
+        </Row>
+        <Row className="mt-3">
+          <Col sm={12} md={6}>
+            <Cards title="Hand Cards" type="hand" cards={handCards}/>
+          </Col>
+          <Col sm={12} md={6}>
+            <Cards title="Field Cards" type="field" cards={fieldCards} />
+          </Col>
+        </Row>
+        <Row className="mt-5">
+          <Col sm={12} md={6}>
+            <Result title="Fusions" combinations={fuses} type='fusion' />
+          </Col>
+          <Col sm={12} md={6}>
+            <Result title="Equips" combinations={equips} type='equip' />
+          </Col>
+        </Row>
+      </Container>
     </>
   )
 }
