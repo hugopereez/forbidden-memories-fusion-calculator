@@ -37,9 +37,16 @@ const cardSlice = createSlice({
                 state.handCards[action.payload.index] = null;
                 console.log('state.fieldCards', state.fieldCards)
             }
+        },
+        clearCards: (state, action: PayloadAction<{ type: 'field' | 'hand'; }>) => {
+            if (action.payload.type === 'field') {
+                state.fieldCards = Array(5).fill(null);
+            } else {
+                state.handCards = Array(5).fill(null);
+            }
         }
     },
 });
 
-export const { addCard, removeCard, moveCardToField } = cardSlice.actions;
+export const { addCard, removeCard, moveCardToField, clearCards } = cardSlice.actions;
 export default cardSlice.reducer;

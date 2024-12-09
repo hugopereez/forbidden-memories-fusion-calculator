@@ -17,7 +17,6 @@ const cards = prepareCards();
 
 export const CardInput = ({ index, type, card }: CardInputProps) => {
   const [cardName, setCardName] = useState<string>("");
-  // const [card, setCard] = useState<Card | null>(null);
   const [suggestions, setSuggestions] = useState<Card[]>([]);
   const dispatch = useAppDispatch();
 
@@ -58,6 +57,12 @@ export const CardInput = ({ index, type, card }: CardInputProps) => {
     setCardName("");
     dispatch(moveCardToField({ index }));
   };
+
+  useEffect(() => {
+    if (!card) {
+      removeContent();
+    }
+  }, [card])
 
   return (
     <>

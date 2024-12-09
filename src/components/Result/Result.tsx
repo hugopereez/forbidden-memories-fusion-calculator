@@ -18,7 +18,7 @@ export const Result = ({ title, combinations, type }: ResultProps) => {
                     <thead>
                         <tr>
                             <th>Card 1</th>
-                            <th>Card 1</th>
+                            <th>Card 2</th>
                             { type === 'fusion' && <th>Result</th> }
                         </tr>
                     </thead>
