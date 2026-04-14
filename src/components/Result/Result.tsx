@@ -10,11 +10,20 @@ interface ResultProps {
 }
 
 export const Result = ({ title, combinations, handleFuseButton, type }: ResultProps) => {
+    const sortedCombinations =
+    type === 'fusion'
+      ? [...(combinations as FusionItem[])].sort((a, b) => {
+          const attackDiff = (b.result?.Attack ?? 0) - (a.result?.Attack ?? 0);
+          if (attackDiff !== 0) return attackDiff;
+
+          return (b.result?.Defense ?? 0) - (a.result?.Defense ?? 0);
+        })
+      : combinations;
   return (
     <>
         <h3>{ title }</h3>
         {
-            combinations.length > 0 && (
+            sortedCombinations.length > 0 && (
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -25,7 +34,7 @@ export const Result = ({ title, combinations, handleFuseButton, type }: ResultPr
                         </tr>
                     </thead>
                     <tbody>
-                        { combinations.map((combination, index) => (
+                        { sortedCombinations.map((combination, index) => (
                             <tr key={`comb-${type}-${index}`}>
                                 <td>{ combination.card1.Name } </td>
                                 <td>{ combination.card2.Name }</td>
@@ -42,7 +51,7 @@ export const Result = ({ title, combinations, handleFuseButton, type }: ResultPr
             )
         }
         {
-            combinations.length === 0 && <p>No combinations found</p>
+            sortedCombinations.length === 0 && <p>No combinations found</p>
         }
     </>
   )
