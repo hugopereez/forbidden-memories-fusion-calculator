@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Badge, Col, Container, Row } from 'react-bootstrap';
+import { Badge, Button, Col, Container, Row } from 'react-bootstrap';
 import { Cards } from './components/Cards/Cards';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { useEffect } from 'react';
@@ -8,7 +8,7 @@ import { updateCombinations } from './store/slice/combinationSlice';
 import { Result } from './components/Result/Result';
 import { Card, FusionItem } from './interfaces';
 import { prepareCards } from './utils/cards';
-import { addCard, removeCardsByName } from './store/slice/cardSlice';
+import { addCard, clearCards, removeCardsByName } from './store/slice/cardSlice';
 
 function App() {
   const handCards = useAppSelector(state => state.cards.handCards);
@@ -57,6 +57,10 @@ function App() {
       dispatch(addCard({ index, card: fusionCardFind, type: 'field' }));
     }
   };
+  const handleClearAllButton = () => {
+    dispatch(clearCards({ type: 'field' }));
+    dispatch(clearCards({ type: 'hand' }));
+  }
   useEffect(() => {
     const combinations = findFusion(handCards, fieldCards);
     dispatch(updateCombinations(combinations));
@@ -67,6 +71,22 @@ function App() {
         <div className="header d-flex justify-content-center align-items-center">
           <h1>Fusion Calculator</h1>
         </div>
+        {
+          handCards.some(card => card !== null) || fieldCards.some(card => card !== null) ? (
+            <>
+              <Row className="mt-2 justify-content-center align-items-center">
+                <Button
+                  variant="danger"
+                  size="sm"
+                  className="w-auto"
+                  onClick={handleClearAllButton}
+                >
+                  Reset All
+                </Button>
+              </Row>
+            </>
+          ) : null
+        }
         <Row className="mt-2 justify-content-center align-items-center">
           <Col xs={6}>
             <Badge bg="secondary">Fusions: {fuses.length}</Badge>
