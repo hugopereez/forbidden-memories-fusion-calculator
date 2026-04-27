@@ -30,3 +30,41 @@ export const findFusion = (handCards: (Card | null)[], fieldCards: (Card | null)
 
     return { fuses, equips };
 };
+
+export const findFusionForCard = (
+  targetCard: Card,
+  handCards: (Card | null)[],
+  fieldCards: (Card | null)[]
+): { fuses: FusionItem[]; equips: Equip[] } => {
+  const cards = [...handCards, ...fieldCards]
+    .filter((card): card is Card => !!card && card.Id !== targetCard.Id);
+
+  const fuses: FusionItem[] = [];
+  const equips: Equip[] = [];
+
+  const targetFuses = (fusionsList[targetCard.Id] || []) as FusionList[];
+  const targetEquips = equipsList[targetCard.Id] || [];
+
+  for (const card of cards) {
+    const fusion = targetFuses.find(f => f.card === card.Id);
+
+    if (fusion) {
+      fuses.push({
+        card1: targetCard,
+        card2: card,
+        result: getCardById(fusion.result)
+      });
+    }
+
+    const equip = targetEquips.find(e => e === card.Id);
+
+    if (equip) {
+      equips.push({
+        card1: targetCard,
+        card2: card
+      });
+    }
+  }
+
+  return { fuses, equips };
+};
