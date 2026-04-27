@@ -36,7 +36,7 @@ export const CardInput = ({ index, type, card }: CardInputProps) => {
       const filteredSuggestions = cards.filter((card) =>
         card.Name.toLowerCase().includes(value.toLowerCase())
       );
-      setSuggestions(filteredSuggestions);
+      setSuggestions(filteredSuggestions.sort((a, b) => a.Name.localeCompare(b.Name)));
     } else {
       setSuggestions([]);
     }
