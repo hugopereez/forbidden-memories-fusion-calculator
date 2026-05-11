@@ -60,6 +60,7 @@ function App() {
   const handleClearAllButton = () => {
     dispatch(clearCards({ type: 'field' }));
     dispatch(clearCards({ type: 'hand' }));
+    console.clear();
   }
   useEffect(() => {
     const combinations = findFusion(handCards, fieldCards);

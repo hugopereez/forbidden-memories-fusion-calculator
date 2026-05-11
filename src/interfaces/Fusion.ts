@@ -4,6 +4,7 @@ export interface FusionItem {
     card1: Card;
     card2: Card;
     result: Card | null;
+    moreFusions?: number;
 }
 
 export interface FusionList {
